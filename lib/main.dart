@@ -2,7 +2,7 @@ import 'package:carvaan/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:carvaan/pages/home_page.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -20,9 +20,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily:GoogleFonts.poppins().fontFamily,
-      ),
-      home:HomePage(),
+          // fontFamily:GoogleFonts.poppins().fontFamily,
+          ),
+      home: HomePage(),
     );
   }
 }
