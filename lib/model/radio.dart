@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+
 class MyRadioList {
   final List<MyRadio> radios;
   MyRadioList({
@@ -17,9 +18,9 @@ class MyRadioList {
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-  
+
     result.addAll({'radios': radios.map((x) => x.toMap()).toList()});
-  
+
     return result;
   }
 
@@ -31,7 +32,8 @@ class MyRadioList {
 
   String toJson() => json.encode(toMap());
 
-  factory MyRadioList.fromJson(String source) => MyRadioList.fromMap(json.decode(source));
+  factory MyRadioList.fromJson(String source) =>
+      MyRadioList.fromMap(json.decode(source));
 
   @override
   String toString() => 'MyRadioList(radios: $radios)';
@@ -40,14 +42,14 @@ class MyRadioList {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     final listEquals = const DeepCollectionEquality().equals;
-  
-    return other is MyRadioList &&
-      listEquals(other.radios, radios);
+
+    return other is MyRadioList && listEquals(other.radios, radios);
   }
 
   @override
   int get hashCode => radios.hashCode;
 }
+
 class MyRadio {
   final int id;
   final int order;
@@ -61,19 +63,18 @@ class MyRadio {
   final String tagline;
   final String color;
   MyRadio({
-     this.id,
-     this.order,
-     this.name,
-     this.desc,
-     this.url,
-     this.image,
-     this.icon,
-     this.lang,
-     this.category,
-     this.tagline,
-     this.color,
+    this.id,
+    this.order,
+    this.name,
+    this.desc,
+    this.url,
+    this.image,
+    this.icon,
+    this.lang,
+    this.category,
+    this.tagline,
+    this.color,
   });
-
 
   MyRadio copyWith({
     int id,
@@ -105,7 +106,7 @@ class MyRadio {
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-  
+
     result.addAll({'id': id});
     result.addAll({'order': order});
     result.addAll({'name': name});
@@ -117,7 +118,7 @@ class MyRadio {
     result.addAll({'category': category});
     result.addAll({'tagline': tagline});
     result.addAll({'color': color});
-  
+
     return result;
   }
 
@@ -139,7 +140,8 @@ class MyRadio {
 
   String toJson() => json.encode(toMap());
 
-  factory MyRadio.fromJson(String source) => MyRadio.fromMap(json.decode(source));
+  factory MyRadio.fromJson(String source) =>
+      MyRadio.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -149,33 +151,33 @@ class MyRadio {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is MyRadio &&
-      other.id == id &&
-      other.order == order &&
-      other.name == name &&
-      other.desc == desc &&
-      other.url == url &&
-      other.image == image &&
-      other.icon == icon &&
-      other.lang == lang &&
-      other.category == category &&
-      other.tagline == tagline &&
-      other.color == color;
+        other.id == id &&
+        other.order == order &&
+        other.name == name &&
+        other.desc == desc &&
+        other.url == url &&
+        other.image == image &&
+        other.icon == icon &&
+        other.lang == lang &&
+        other.category == category &&
+        other.tagline == tagline &&
+        other.color == color;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      order.hashCode ^
-      name.hashCode ^
-      desc.hashCode ^
-      url.hashCode ^
-      image.hashCode ^
-      icon.hashCode ^
-      lang.hashCode ^
-      category.hashCode ^
-      tagline.hashCode ^
-      color.hashCode;
+        order.hashCode ^
+        name.hashCode ^
+        desc.hashCode ^
+        url.hashCode ^
+        image.hashCode ^
+        icon.hashCode ^
+        lang.hashCode ^
+        category.hashCode ^
+        tagline.hashCode ^
+        color.hashCode;
   }
 }
