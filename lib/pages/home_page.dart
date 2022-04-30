@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:alan_voice/alan_callback.dart';
+import 'package:alan_voice/alan_voice.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:carvaan/model/radio.dart';
 import 'package:carvaan/utils/ai_util.dart';
@@ -18,21 +20,90 @@ class _HomePageState extends State<HomePage> {
   MyRadio _selectedRadio;
   Color _selectedColor;
   bool _isPlaying = false;
+   final sugg = [
+    "Play",
+    "Stop",
+    "Play rock music",
+    "Play 107 FM",
+    "Play next",
+    "Play 104 FM",
+    "Pause",
+    "Play previous",
+    "Play pop music"
+  ];
 
   final AudioPlayer _audioPlayer = AudioPlayer();
   @override
   void initState() {
     super.initState();
+    setupAlan();
     fetchRadios();
     _audioPlayer.onPlayerStateChanged.listen((event) {
       
-      if (event == PlayerState.PLAYING) {
+      if (event == AudioPlayerState.PLAYING) {
         _isPlaying = true;
       } else {
         _isPlaying = false;
       }
       setState(() {});
     });
+  }
+  setupAlan(){
+    AlanVoice.addButton("9c076c4defe10d41425b9592a1682e8a2e956eca572e1d8b807a3e2338fdd0dc/stage",
+    buttonAlign:AlanVoice.BUTTON_ALIGN_RIGHT,);
+    AlanVoice.callbacks.add((command)=>_handleCommand(command.data));
+  }
+  _handleCommand(Map<String,dynamic> response){
+    switch (response["command"]) {
+      case "play":
+        _playMusic(_selectedRadio.url);
+        break;
+
+      case "play_channel":
+        final id = response["id"];
+        // _audioPlayer.pause();
+        MyRadio newRadio = radios.firstWhere((element) => element.id == id);
+        radios.remove(newRadio);
+        radios.insert(0, newRadio);
+        _playMusic(newRadio.url);
+        break;
+
+      case "stop":
+        _audioPlayer.stop();
+        break;
+      case "next":
+        final index = _selectedRadio.id;
+        MyRadio newRadio;
+        if (index + 1 > radios.length) {
+          newRadio = radios.firstWhere((element) => element.id == 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        } else {
+          newRadio = radios.firstWhere((element) => element.id == index + 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        }
+        _playMusic(newRadio.url);
+        break;
+
+      case "prev":
+        final index = _selectedRadio.id;
+        MyRadio newRadio;
+        if (index - 1 <= 0) {
+          newRadio = radios.firstWhere((element) => element.id == 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        } else {
+          newRadio = radios.firstWhere((element) => element.id == index - 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        }
+        _playMusic(newRadio.url);
+        break;
+      default:
+        print("Command was ${response["command"]}");
+        break;
+    }
   }
 
   fetchRadios() async {

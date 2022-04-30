@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 
 class MyRadioList {
   final List<MyRadio> radios;
@@ -17,14 +17,14 @@ class MyRadioList {
   }
 
   Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-
-    result.addAll({'radios': radios.map((x) => x.toMap()).toList()});
-
-    return result;
+    return {
+      'radios': radios?.map((x) => x?.toMap())?.toList(),
+    };
   }
 
   factory MyRadioList.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+
     return MyRadioList(
       radios: List<MyRadio>.from(map['radios']?.map((x) => MyRadio.fromMap(x))),
     );
@@ -39,11 +39,10 @@ class MyRadioList {
   String toString() => 'MyRadioList(radios: $radios)';
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    final listEquals = const DeepCollectionEquality().equals;
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
 
-    return other is MyRadioList && listEquals(other.radios, radios);
+    return o is MyRadioList && listEquals(o.radios, radios);
   }
 
   @override
@@ -54,87 +53,87 @@ class MyRadio {
   final int id;
   final int order;
   final String name;
-  final String desc;
-  final String url;
-  final String image;
-  final String icon;
-  final String lang;
-  final String category;
   final String tagline;
   final String color;
+  final String desc;
+  final String url;
+  final String category;
+  final String icon;
+  final String image;
+  final String lang;
   MyRadio({
     this.id,
     this.order,
     this.name,
-    this.desc,
-    this.url,
-    this.image,
-    this.icon,
-    this.lang,
-    this.category,
     this.tagline,
     this.color,
+    this.desc,
+    this.url,
+    this.category,
+    this.icon,
+    this.image,
+    this.lang,
   });
 
   MyRadio copyWith({
     int id,
     int order,
     String name,
-    String desc,
-    String url,
-    String image,
-    String icon,
-    String lang,
-    String category,
     String tagline,
     String color,
+    String desc,
+    String url,
+    String category,
+    String icon,
+    String image,
+    String lang,
   }) {
     return MyRadio(
       id: id ?? this.id,
       order: order ?? this.order,
       name: name ?? this.name,
-      desc: desc ?? this.desc,
-      url: url ?? this.url,
-      image: image ?? this.image,
-      icon: icon ?? this.icon,
-      lang: lang ?? this.lang,
-      category: category ?? this.category,
       tagline: tagline ?? this.tagline,
       color: color ?? this.color,
+      desc: desc ?? this.desc,
+      url: url ?? this.url,
+      category: category ?? this.category,
+      icon: icon ?? this.icon,
+      image: image ?? this.image,
+      lang: lang ?? this.lang,
     );
   }
 
   Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-
-    result.addAll({'id': id});
-    result.addAll({'order': order});
-    result.addAll({'name': name});
-    result.addAll({'desc': desc});
-    result.addAll({'url': url});
-    result.addAll({'image': image});
-    result.addAll({'icon': icon});
-    result.addAll({'lang': lang});
-    result.addAll({'category': category});
-    result.addAll({'tagline': tagline});
-    result.addAll({'color': color});
-
-    return result;
+    return {
+      'id': id,
+      'order': order,
+      'name': name,
+      'tagline': tagline,
+      'color': color,
+      'desc': desc,
+      'url': url,
+      'category': category,
+      'icon': icon,
+      'image': image,
+      'lang': lang,
+    };
   }
 
   factory MyRadio.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+
     return MyRadio(
-      id: map['id']?.toInt() ?? 0,
-      order: map['order']?.toInt() ?? 0,
-      name: map['name'] ?? '',
-      desc: map['desc'] ?? '',
-      url: map['url'] ?? '',
-      image: map['image'] ?? '',
-      icon: map['icon'] ?? '',
-      lang: map['lang'] ?? '',
-      category: map['category'] ?? '',
-      tagline: map['tagline'] ?? '',
-      color: map['color'] ?? '',
+      id: map['id'],
+      order: map['order'],
+      name: map['name'],
+      tagline: map['tagline'],
+      color: map['color'],
+      desc: map['desc'],
+      url: map['url'],
+      category: map['category'],
+      icon: map['icon'],
+      image: map['image'],
+      lang: map['lang'],
     );
   }
 
@@ -145,25 +144,25 @@ class MyRadio {
 
   @override
   String toString() {
-    return 'MyRadio(id: $id, order: $order, name: $name, desc: $desc, url: $url, image: $image, icon: $icon, lang: $lang, category: $category, tagline: $tagline, color: $color)';
+    return 'MyRadio(id: $id, order: $order, name: $name, tagline: $tagline, color: $color, desc: $desc, url: $url, category: $category, icon: $icon, image: $image, lang: $lang)';
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+  bool operator ==(Object o) {
+    if (identical(this, o)) return true;
 
-    return other is MyRadio &&
-        other.id == id &&
-        other.order == order &&
-        other.name == name &&
-        other.desc == desc &&
-        other.url == url &&
-        other.image == image &&
-        other.icon == icon &&
-        other.lang == lang &&
-        other.category == category &&
-        other.tagline == tagline &&
-        other.color == color;
+    return o is MyRadio &&
+        o.id == id &&
+        o.order == order &&
+        o.name == name &&
+        o.tagline == tagline &&
+        o.color == color &&
+        o.desc == desc &&
+        o.url == url &&
+        o.category == category &&
+        o.icon == icon &&
+        o.image == image &&
+        o.lang == lang;
   }
 
   @override
@@ -171,13 +170,13 @@ class MyRadio {
     return id.hashCode ^
         order.hashCode ^
         name.hashCode ^
+        tagline.hashCode ^
+        color.hashCode ^
         desc.hashCode ^
         url.hashCode ^
-        image.hashCode ^
-        icon.hashCode ^
-        lang.hashCode ^
         category.hashCode ^
-        tagline.hashCode ^
-        color.hashCode;
+        icon.hashCode ^
+        image.hashCode ^
+        lang.hashCode;
   }
 }
