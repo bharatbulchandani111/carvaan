@@ -24,9 +24,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     fetchRadios();
-    _audioPlayer.onPlayerStateChanged.listen((state) {
-      var AudioPlayerState;
-      if (state == AudioPlayerState.PLAYING) {
+    _audioPlayer.onPlayerStateChanged.listen((event) {
+      
+      if (event == PlayerState.PLAYING) {
         _isPlaying = true;
       } else {
         _isPlaying = false;
@@ -36,8 +36,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   fetchRadios() async {
-    final radioJson = await rootBundle.loadString('assets/radio.json');
+    
+    final radioJson = await rootBundle.loadString("assets/radio.json");
     radios = MyRadioList.fromJson(radioJson).radios;
+    _selectedRadio = radios[0];
+    _selectedColor = Color(int.tryParse(_selectedRadio.color));
     print(radios);
     setState(() {});
   }
@@ -46,8 +49,7 @@ class _HomePageState extends State<HomePage> {
     _audioPlayer.play(url);
     _selectedRadio = radios.firstWhere((element) => element.url == url);
     print(_selectedRadio.name);
-    setState(() {
-      _isPlaying = true;
+    setState(() { 
     });
   }
 
@@ -59,7 +61,10 @@ class _HomePageState extends State<HomePage> {
           VxAnimatedBox()
               .size(context.screenWidth, context.screenHeight)
               .withGradient(LinearGradient(
-                colors: [AIUtil.primaryColor1, AIUtil.primaryColor2],
+                 colors: [
+                    AIColor.primaryColor2,
+                    _selectedColor ?? AIColor.primaryColor1,
+                  ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ))
@@ -77,9 +82,11 @@ class _HomePageState extends State<HomePage> {
                   aspectRatio: 1.0,
                   enlargeCenterPage: true,
                   onPageChanged: (index) {
+                    _selectedRadio = radios[index];
                     final colorHex = radios[index].color;
                     _selectedColor = Color(int.tryParse(colorHex));
                     setState(() {});
+                    
                   },
                   itemBuilder: (context, index) {
                     final rad = radios[index];
@@ -152,9 +159,13 @@ class _HomePageState extends State<HomePage> {
                 size: 50.0,
               ).onInkTap(() {
                 if (_isPlaying)
-                  _audioPlayer.stop();
+                  {
+                    _audioPlayer.stop();
+                    }
                 else
-                  _playMusic(_selectedRadio.url);
+                  {
+                    _playMusic(_selectedRadio.url);
+                    }
               })
             ].vStack(),
           ).pOnly(bottom: context.percentHeight * 12)
@@ -165,3 +176,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+

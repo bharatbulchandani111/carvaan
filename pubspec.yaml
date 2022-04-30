@@ -29,7 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   alan_voice: ^3.3.0
-  audioplayers: ^0.20.1
+  audioplayers: ^0.19.0
   cupertino_icons: ^1.0.1
   flutter:
     sdk: flutter
