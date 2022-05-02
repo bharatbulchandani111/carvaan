@@ -7,6 +7,6 @@ mixin AIUtil{
 
 }
 mixin AIColor{
-  static Color primaryColor1=Vx.pink400;
-  static Color primaryColor2=Vx.green500;
+  static Color primaryColor1=Vx.pink300;
+  static Color primaryColor2=Vx.purple500;
 }
