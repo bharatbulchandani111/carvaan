@@ -19,7 +19,6 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.8.1 <3.0.0-0"
-  
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -29,11 +28,11 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   alan_voice: ^3.3.0
-  audioplayers: ^0.17.0
+  assets_audio_player: ^3.0.4+1
+  audioplayers: ^0.20.1
   cupertino_icons: ^1.0.1
   flutter:
     sdk: flutter
-  
   velocity_x: ^3.4.0
 
 dev_dependencies:
