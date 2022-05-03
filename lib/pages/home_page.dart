@@ -1,4 +1,5 @@
 import 'package:alan_voice/alan_voice.dart';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:carvaan/model/radio.dart';
 import 'package:carvaan/utils/ai_util.dart';
@@ -29,25 +30,36 @@ class _HomePageState extends State<HomePage> {
     "Play pop music"
   ];
 
-  final AudioPlayer _audioPlayer = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
+  final AudioPlayer _audioPlayer = AudioPlayer();
+ 
   
  
 
   @override
   void initState() {
     super.initState();
+
     setupAlan();
     fetchRadios();
 
-    _audioPlayer.onPlayerStateChanged.listen((event) {
-      if (event == PlayerState.PLAYING) {
+    _audioPlayer.onPlayerStateChanged.listen((state) {
+      if (state == PlayerState.PLAYING) {
         _isPlaying = true;
-      } else {
+        
+      }
+      else{
         _isPlaying = false;
       }
-      setState(() {});
+      setState(() {
+        
+      });
     });
+    
   }
+  
+
+    
+  
 
   setupAlan() {
     AlanVoice.addButton("9c076c4defe10d41425b9592a1682e8a2e956eca572e1d8b807a3e2338fdd0dc/stage",
@@ -63,7 +75,8 @@ class _HomePageState extends State<HomePage> {
 
       case "play_channel":
         final id = response["id"];
-        // _audioPlayer.pause();
+        _audioPlayer.pause();
+        
         MyRadio newRadio = radios.firstWhere((element) => element.id == id);
         radios.remove(newRadio);
         radios.insert(0, newRadio);
@@ -72,6 +85,7 @@ class _HomePageState extends State<HomePage> {
 
       case "stop":
         _audioPlayer.stop();
+        
         break;
       case "next":
         final index = _selectedRadio.id;
@@ -118,7 +132,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   _playMusic(String url) {
-    _audioPlayer.play('https://onlineradiofm.in/uttar-pradesh/agra/big');
+   
+    _audioPlayer.play(url);
     
     _selectedRadio = radios.firstWhere((element) => element.url == url);
     print(_selectedRadio.name);
@@ -200,10 +215,10 @@ class _HomePageState extends State<HomePage> {
               ? VxSwiper.builder(
                   itemCount: radios.length,
                   aspectRatio: context.mdWindowSize == MobileDeviceSize.small
-                      ? 0.75
+                      ? 0.73
                       : context.mdWindowSize == MobileDeviceSize.medium
-                          ? 0.95
-                          : 0.8,
+                          ? 0.77
+                          : 0.82,
                   enlargeCenterPage: true,
                   onPageChanged: (index) {
                     _selectedRadio = radios[index];
@@ -291,6 +306,7 @@ class _HomePageState extends State<HomePage> {
                 size: 50.0,
               ).onInkTap(() {
                 if (_isPlaying) {
+                 
                   _audioPlayer.stop();
                 } else {
                   _playMusic(_selectedRadio.url);
