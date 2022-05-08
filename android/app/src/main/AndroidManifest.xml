@@ -5,10 +5,12 @@
    <application
         android:label="carvaan"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
+        
+        
         <activity
             android:name=".MainActivity"
-            android:usesCleartextTraffic="true"
 
             android:exported="true"
             android:launchMode="singleTop"
