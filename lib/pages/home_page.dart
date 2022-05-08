@@ -31,9 +31,6 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final AudioPlayer _audioPlayer = AudioPlayer();
- 
-  
- 
 
   @override
   void initState() {
@@ -45,24 +42,16 @@ class _HomePageState extends State<HomePage> {
     _audioPlayer.onPlayerStateChanged.listen((state) {
       if (state == PlayerState.PLAYING) {
         _isPlaying = true;
-        
-      }
-      else{
+      } else {
         _isPlaying = false;
       }
-      setState(() {
-        
-      });
+      setState(() {});
     });
-    
   }
-  
-
-    
-  
 
   setupAlan() {
-    AlanVoice.addButton("9c076c4defe10d41425b9592a1682e8a2e956eca572e1d8b807a3e2338fdd0dc/stage",
+    AlanVoice.addButton(
+        "9c076c4defe10d41425b9592a1682e8a2e956eca572e1d8b807a3e2338fdd0dc/stage",
         buttonAlign: AlanVoice.BUTTON_ALIGN_RIGHT);
     AlanVoice.callbacks.add((command) => _handleCommand(command.data));
   }
@@ -76,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       case "play_channel":
         final id = response["id"];
         _audioPlayer.pause();
-        
+
         MyRadio newRadio = radios.firstWhere((element) => element.id == id);
         radios.remove(newRadio);
         radios.insert(0, newRadio);
@@ -85,9 +74,10 @@ class _HomePageState extends State<HomePage> {
 
       case "stop":
         _audioPlayer.stop();
-        
+
         break;
       case "next":
+        _audioPlayer.stop();
         final index = _selectedRadio.id;
         MyRadio newRadio;
         if (index + 1 > radios.length) {
@@ -103,6 +93,7 @@ class _HomePageState extends State<HomePage> {
         break;
 
       case "prev":
+        _audioPlayer.stop();
         final index = _selectedRadio.id;
         MyRadio newRadio;
         if (index - 1 <= 0) {
@@ -132,11 +123,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   _playMusic(String url) {
-   
-    _audioPlayer.play(url);
-    
+    _audioPlayer.play(
+        "http://node-14.zeno.fm/cm1fkgbv1ceuv?rj-ttl=5&rj-token=AAABa7Pm__WhrF8jIJ36of_AC5C-TeMcqPiHC5BJB1j1JxkowiWAyQ");
+
     _selectedRadio = radios.firstWhere((element) => element.url == url);
-    print(_selectedRadio.name);
+    print(_selectedRadio.url);
     setState(() {});
   }
 
@@ -158,7 +149,13 @@ class _HomePageState extends State<HomePage> {
                         .map((e) => ListTile(
                               leading: CircleAvatar(
                                 backgroundImage: NetworkImage(e.icon),
-                              ),
+                              ).onInkTap(() {
+                                if (_isPlaying) {
+                                  _audioPlayer.stop();
+                                } else {
+                                  _playMusic(_selectedRadio.url);
+                                }
+                              }),
                               title: "${e.name} FM".text.white.make(),
                               subtitle: e.tagline.text.white.make(),
                             ))
@@ -185,7 +182,7 @@ class _HomePageState extends State<HomePage> {
               .make(),
           [
             AppBar(
-              title: "AI Radio".text.xl4.bold.white.make().shimmer(
+              title: "Carvaan".text.xl4.bold.white.make().shimmer(
                   primaryColor: Vx.purple300, secondaryColor: Colors.white),
               backgroundColor: Colors.transparent,
               elevation: 0.0,
@@ -215,10 +212,10 @@ class _HomePageState extends State<HomePage> {
               ? VxSwiper.builder(
                   itemCount: radios.length,
                   aspectRatio: context.mdWindowSize == MobileDeviceSize.small
-                      ? 0.73
+                      ? 0.7
                       : context.mdWindowSize == MobileDeviceSize.medium
-                          ? 0.77
-                          : 0.82,
+                          ? 0.75
+                          : 0.8,
                   enlargeCenterPage: true,
                   onPageChanged: (index) {
                     _selectedRadio = radios[index];
@@ -293,11 +290,7 @@ class _HomePageState extends State<HomePage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: [
-              if (_isPlaying)
-                "Playing Now - ${_selectedRadio.name} FM"
-                    .text
-                    .white
-                    .makeCentered(),
+              if (_isPlaying) "Playing Now ${_selectedRadio.name} FM".text.white.makeCentered(),
               Icon(
                 _isPlaying
                     ? CupertinoIcons.stop_circle
@@ -306,7 +299,6 @@ class _HomePageState extends State<HomePage> {
                 size: 50.0,
               ).onInkTap(() {
                 if (_isPlaying) {
-                 
                   _audioPlayer.stop();
                 } else {
                   _playMusic(_selectedRadio.url);
