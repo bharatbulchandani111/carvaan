@@ -12,7 +12,7 @@
                "lang": "English",
                "category": "jazz",
                "disliked": false,
-               "order": 5
+               "order": 1
         },
         {
             "id": 2,
@@ -26,7 +26,7 @@
             "lang": "Hindi",
             "category": "pop",
             "disliked": false,
-            "order": 1
+            "order": 2
         },
         {
             "id": 3,
@@ -68,7 +68,7 @@
                "lang": "Hindi",
                "disliked": false,
                "category": "rock",
-               "order": 2
+               "order": 5
            },
            
            
