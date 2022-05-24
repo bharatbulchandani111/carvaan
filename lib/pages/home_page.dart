@@ -19,15 +19,15 @@ class _HomePageState extends State<HomePage> {
   Color _selectedColor;
   bool _isPlaying = false;
   final sugg = [
-    "Play",
-    "Stop",
-    "Play rock music",
-    "Play 107 FM",
-    "Play next",
-    "Play 104 FM",
-    "Pause",
-    "Play previous",
-    "Play pop music"
+    "Pop",
+    "Rock",
+    "Jazz",
+    "R&B",
+    "Electronic",
+    "Hip-Hop",
+    "Punk",
+    "Country",
+    "Classical",
   ];
 
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -59,17 +59,17 @@ class _HomePageState extends State<HomePage> {
   _handleCommand(Map<String, dynamic> response) {
     switch (response["command"]) {
       case "play":
-        _playMusic(_selectedRadio.url);
+        _audioPlayer.stop();
+        _playMusic(_selectedRadio.url, _selectedRadio.name, _selectedRadio.id);
         break;
 
       case "play_channel":
+        _audioPlayer.stop();
         final id = response["id"];
-        _audioPlayer.pause();
-
         MyRadio newRadio = radios.firstWhere((element) => element.id == id);
         radios.remove(newRadio);
         radios.insert(0, newRadio);
-        _playMusic(newRadio.url);
+        _playMusic(newRadio.url, newRadio.name, newRadio.id);
         break;
 
       case "stop":
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
           radios.remove(newRadio);
           radios.insert(0, newRadio);
         }
-        _playMusic(newRadio.url);
+        _playMusic(newRadio.url,newRadio.name,newRadio.id);
         break;
 
       case "prev":
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
           radios.remove(newRadio);
           radios.insert(0, newRadio);
         }
-        _playMusic(newRadio.url);
+        _playMusic(newRadio.url,newRadio.name,newRadio.id);
         break;
       default:
         print("Command was ${response["command"]}");
@@ -122,11 +122,10 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  _playMusic(String url) {
-    _audioPlayer.play(
-        "http://node-14.zeno.fm/cm1fkgbv1ceuv?rj-ttl=5&rj-token=AAABa7Pm__WhrF8jIJ36of_AC5C-TeMcqPiHC5BJB1j1JxkowiWAyQ");
+  _playMusic(String url,String name,int id)  {
+    _audioPlayer.play(url);
 
-    _selectedRadio = radios.firstWhere((element) => element.url == url);
+    _selectedRadio = radios.firstWhere((element) => element.url == url && element.name == name && element.id == id);
     print(_selectedRadio.url);
     setState(() {});
   }
@@ -153,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                                 if (_isPlaying) {
                                   _audioPlayer.stop();
                                 } else {
-                                  _playMusic(_selectedRadio.url);
+                                  _playMusic(_selectedRadio.url, _selectedRadio.name, _selectedRadio.id);
                                 }
                               }),
                               title: "${e.name} FM".text.white.make(),
@@ -189,15 +188,16 @@ class _HomePageState extends State<HomePage> {
               centerTitle: true,
             ).h(100.0).p16(),
             "Start with - Hey Alan 👇".text.italic.semiBold.white.make(),
-            10.heightBox,
+            15.heightBox,
             VxSwiper.builder(
               itemCount: sugg.length,
-              height: 50.0,
+              height: 60.0,
               viewportFraction: 0.35,
               autoPlay: true,
               autoPlayAnimationDuration: 3.seconds,
               autoPlayCurve: Curves.linear,
               enableInfiniteScroll: true,
+              
               itemBuilder: (context, index) {
                 final s = sugg[index];
                 return Chip(
@@ -207,21 +207,22 @@ class _HomePageState extends State<HomePage> {
               },
             )
           ].vStack(alignment: MainAxisAlignment.start),
-          30.heightBox,
+          40.heightBox,
           radios != null
               ? VxSwiper.builder(
                   itemCount: radios.length,
                   aspectRatio: context.mdWindowSize == MobileDeviceSize.small
-                      ? 0.7
+                      ? 0.75
                       : context.mdWindowSize == MobileDeviceSize.medium
-                          ? 0.75
-                          : 0.8,
+                          ? 0.85
+                          : 1.0,
                   enlargeCenterPage: true,
                   onPageChanged: (index) {
                     _selectedRadio = radios[index];
                     final colorHex = radios[index].color;
                     _selectedColor = Color(int.tryParse(colorHex));
-                    setState(() {});
+                   
+                    // setState(() {});
                   },
                   itemBuilder: (context, index) {
                     final rad = radios[index];
@@ -236,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                             child:
                                 rad.category.text.uppercase.white.make().px16(),
                           )
-                              .height(40)
+                              .height(50)
                               .black
                               .alignCenter
                               .withRounded(value: 10.0)
@@ -248,7 +249,7 @@ class _HomePageState extends State<HomePage> {
                             [
                               rad.name.text.xl3.white.bold.make(),
                               5.heightBox,
-                              rad.tagline.text.sm.white.semiBold.make(),
+                              rad.tagline.text.xl2.semiBold.white.make(),
                             ],
                             crossAlignment: CrossAxisAlignment.center,
                           ),
@@ -271,14 +272,14 @@ class _HomePageState extends State<HomePage> {
                               image: NetworkImage(rad.image),
                               fit: BoxFit.cover,
                               colorFilter: ColorFilter.mode(
-                                  Colors.black.withOpacity(0.3),
+                                  Colors.black.withOpacity(0.2),
                                   BlendMode.darken)),
                         )
                         .border(color: Colors.black, width: 5.0)
                         .withRounded(value: 60.0)
                         .make()
                         .onInkDoubleTap(() {
-                      _playMusic(rad.url);
+                      _playMusic(rad.url, rad.name, rad.id);
                     }).p16();
                   },
                 ).centered()
@@ -301,7 +302,8 @@ class _HomePageState extends State<HomePage> {
                 if (_isPlaying) {
                   _audioPlayer.stop();
                 } else {
-                  _playMusic(_selectedRadio.url);
+                  _audioPlayer.stop();
+                  _playMusic(_selectedRadio.url, _selectedRadio.name, _selectedRadio.id);
                 }
               })
             ].vStack(),
